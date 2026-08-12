@@ -13,6 +13,12 @@ SHIN_LENGTH = 35.0
 LEG_THICKNESS = 4
 MOTOR_MAX_FORCE = 20_000
 
+CEILING_CATEGORY = 0b1
+ALL_CATEGORIES = 0xFFFFFFFF
+# legs ignore the ceiling entirely — only the torso is capped by it, so a leg
+# motor can never fight a rigid ceiling constraint and jitter against it.
+NON_CEILING_FILTER = pymunk.ShapeFilter(mask=ALL_CATEGORIES & ~CEILING_CATEGORY)
+
 
 def add_ground(space):
     ground = pymunk.Segment(space.static_body, (-1000, GROUND_Y), (100_000, GROUND_Y), 5)
@@ -27,6 +33,7 @@ def add_ceiling(space):
     ceiling = pymunk.Segment(space.static_body, (-1000, CEILING_Y), (100_000, CEILING_Y), 5)
     ceiling.friction = 0.0
     ceiling.elasticity = 0.0
+    ceiling.filter = pymunk.ShapeFilter(categories=CEILING_CATEGORY)
     space.add(ceiling)
     return ceiling
 
@@ -57,6 +64,7 @@ def build_creature(space, genome, start_x=100):
         thigh_body.position = hip_world
         thigh_shape = pymunk.Segment(thigh_body, (0, 0), (0, THIGH_LENGTH), LEG_THICKNESS)
         thigh_shape.friction = 1.0
+        thigh_shape.filter = NON_CEILING_FILTER
         space.add(thigh_body, thigh_shape)
 
         hip_pivot = pymunk.PivotJoint(torso_body, thigh_body, hip_world)
@@ -70,6 +78,7 @@ def build_creature(space, genome, start_x=100):
         shin_body.position = knee_world
         shin_shape = pymunk.Segment(shin_body, (0, 0), (0, SHIN_LENGTH), LEG_THICKNESS)
         shin_shape.friction = 1.0
+        shin_shape.filter = NON_CEILING_FILTER
         space.add(shin_body, shin_shape)
 
         knee_pivot = pymunk.PivotJoint(thigh_body, shin_body, knee_world)
