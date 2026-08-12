@@ -1,0 +1,2 @@
+pymunk>=7.3
+pygame-ce>=2.5
