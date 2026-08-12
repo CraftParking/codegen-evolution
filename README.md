@@ -47,10 +47,10 @@ pip install -r requirements.txt
 python -m examples.walking_creatures
 ```
 
-It evolves a population for a bit (prints distance each time it improves),
-then opens a window showing the winning creature in action. Needs
-`pymunk` (physics) and `pygame-ce` (rendering) — installed via
-`requirements.txt`.
+It evolves forever, printing distance each time it improves — press
+Ctrl+C whenever you've seen enough, and it opens a window showing the best
+creature found so far in action. Needs `pymunk` (physics) and `pygame-ce`
+(rendering) — installed via `requirements.txt`.
 
 - `creatures/genome.py` — per-leg genes: hip and knee motor amplitude/frequency/phase
 - `creatures/body.py` — builds a torso + two-segment legs in a pymunk physics space
