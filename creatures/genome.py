@@ -5,9 +5,12 @@ import random
 NUM_LEGS = 4
 
 GENE_RANGES = {
-    "amplitude": (0.5, 3.0),
-    "frequency": (0.5, 2.5),
-    "phase": (0.0, 2 * math.pi),
+    "hip_amplitude": (0.5, 3.0),
+    "hip_frequency": (0.5, 2.5),
+    "hip_phase": (0.0, 2 * math.pi),
+    "knee_amplitude": (0.5, 3.0),
+    "knee_frequency": (0.5, 2.5),
+    "knee_phase": (0.0, 2 * math.pi),
 }
 
 
