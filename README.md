@@ -38,9 +38,10 @@ A second sandbox: evolve stick-figure creatures (four fixed-length legs,
 each with a thigh + shin joint) driven by sine-wave "muscle" motors, in a
 2D physics simulation scored purely on distance traveled. The torso can't
 rotate — it only translates — so all locomotion has to come from the legs
-pushing against the ground. Nobody designs the gait; evolution only tunes
-each hip and knee motor's amplitude/frequency/phase to find a stride that
-works.
+pushing against the ground. A ceiling above the arena hard-caps how high
+anything can jump, so evolved hoppers stay within the visible window.
+Nobody designs the gait; evolution only tunes each hip and knee motor's
+amplitude/frequency/phase to find a stride that works.
 
 ```
 pip install -r requirements.txt
