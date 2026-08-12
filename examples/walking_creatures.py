@@ -80,8 +80,8 @@ def render(genome, sim_time=15.0, dt=1 / 60.0):
 
 
 if __name__ == "__main__":
-    print("evolving creatures... (takes a few seconds)")
-    best_genome, best_distance = run()
+    print("evolving creatures... press Ctrl+C to stop and see the best one so far")
+    best_genome, best_distance = run(generations=None)
     print(f"\nbest distance traveled: {best_distance:.1f}")
     print("opening a window to show it walking...")
     render(best_genome)
