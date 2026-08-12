@@ -5,7 +5,6 @@ import random
 NUM_LEGS = 4
 
 GENE_RANGES = {
-    "length": (20.0, 60.0),
     "amplitude": (0.5, 3.0),
     "frequency": (0.5, 2.5),
     "phase": (0.0, 2 * math.pi),

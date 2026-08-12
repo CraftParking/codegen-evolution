@@ -7,6 +7,7 @@ TORSO_WIDTH = 80
 TORSO_HEIGHT = 20
 TORSO_MASS = 5
 LEG_MASS = 1
+LEG_LENGTH = 40.0
 LEG_THICKNESS = 4
 MOTOR_MAX_FORCE = 20_000
 
@@ -20,8 +21,7 @@ def add_ground(space):
 
 
 def build_creature(space, genome, start_x=100):
-    max_leg_length = max(leg["length"] for leg in genome)
-    torso_y = GROUND_Y - max_leg_length - TORSO_HEIGHT / 2 - 5
+    torso_y = GROUND_Y - LEG_LENGTH - TORSO_HEIGHT / 2 - 5
 
     # infinite moment of inertia: torso can translate but never rotate,
     # so leg motor reaction torque can't spin/roll it — only the legs move.
@@ -34,17 +34,16 @@ def build_creature(space, genome, start_x=100):
     num_legs = len(genome)
     legs = []
     for i, leg_gene in enumerate(genome):
-        length = leg_gene["length"]
         offset_x = -TORSO_WIDTH / 2 + (i + 0.5) * (TORSO_WIDTH / num_legs)
         hip_world = (
             torso_body.position.x + offset_x,
             torso_body.position.y + TORSO_HEIGHT / 2,
         )
 
-        leg_moment = pymunk.moment_for_segment(LEG_MASS, (0, 0), (0, length), LEG_THICKNESS)
+        leg_moment = pymunk.moment_for_segment(LEG_MASS, (0, 0), (0, LEG_LENGTH), LEG_THICKNESS)
         leg_body = pymunk.Body(LEG_MASS, leg_moment)
         leg_body.position = hip_world
-        leg_shape = pymunk.Segment(leg_body, (0, 0), (0, length), LEG_THICKNESS)
+        leg_shape = pymunk.Segment(leg_body, (0, 0), (0, LEG_LENGTH), LEG_THICKNESS)
         leg_shape.friction = 1.0
         space.add(leg_body, leg_shape)
 
