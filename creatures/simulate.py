@@ -8,8 +8,11 @@ from creatures.body import GROUND_Y, add_ground, build_creature
 def drive_motors(creature, t):
     for leg in creature["legs"]:
         gene = leg["gene"]
-        leg["motor"].rate = gene["amplitude"] * math.sin(
-            2 * math.pi * gene["frequency"] * t + gene["phase"]
+        leg["hip_motor"].rate = gene["hip_amplitude"] * math.sin(
+            2 * math.pi * gene["hip_frequency"] * t + gene["hip_phase"]
+        )
+        leg["knee_motor"].rate = gene["knee_amplitude"] * math.sin(
+            2 * math.pi * gene["knee_frequency"] * t + gene["knee_phase"]
         )
 
 
