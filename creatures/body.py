@@ -1,3 +1,5 @@
+import math
+
 import pymunk
 
 GROUND_Y = 550
@@ -21,8 +23,9 @@ def build_creature(space, genome, start_x=100):
     max_leg_length = max(leg["length"] for leg in genome)
     torso_y = GROUND_Y - max_leg_length - TORSO_HEIGHT / 2 - 5
 
-    torso_moment = pymunk.moment_for_box(TORSO_MASS, (TORSO_WIDTH, TORSO_HEIGHT))
-    torso_body = pymunk.Body(TORSO_MASS, torso_moment)
+    # infinite moment of inertia: torso can translate but never rotate,
+    # so leg motor reaction torque can't spin/roll it — only the legs move.
+    torso_body = pymunk.Body(TORSO_MASS, math.inf)
     torso_body.position = (start_x, torso_y)
     torso_shape = pymunk.Poly.create_box(torso_body, (TORSO_WIDTH, TORSO_HEIGHT))
     torso_shape.friction = 0.5
