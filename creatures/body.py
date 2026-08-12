@@ -15,9 +15,13 @@ MOTOR_MAX_FORCE = 20_000
 
 CEILING_CATEGORY = 0b1
 ALL_CATEGORIES = 0xFFFFFFFF
+CREATURE_GROUP = 1
 # legs ignore the ceiling entirely — only the torso is capped by it, so a leg
 # motor can never fight a rigid ceiling constraint and jitter against it.
-NON_CEILING_FILTER = pymunk.ShapeFilter(mask=ALL_CATEGORIES & ~CEILING_CATEGORY)
+# shapes sharing a nonzero group never collide with each other, so a
+# creature's own torso/thighs/shins can't tangle with one another either.
+LEG_FILTER = pymunk.ShapeFilter(group=CREATURE_GROUP, mask=ALL_CATEGORIES & ~CEILING_CATEGORY)
+TORSO_FILTER = pymunk.ShapeFilter(group=CREATURE_GROUP)
 
 
 def add_ground(space):
@@ -47,6 +51,7 @@ def build_creature(space, genome, start_x=100):
     torso_body.position = (start_x, torso_y)
     torso_shape = pymunk.Poly.create_box(torso_body, (TORSO_WIDTH, TORSO_HEIGHT))
     torso_shape.friction = 0.5
+    torso_shape.filter = TORSO_FILTER
     space.add(torso_body, torso_shape)
 
     num_legs = len(genome)
@@ -64,7 +69,7 @@ def build_creature(space, genome, start_x=100):
         thigh_body.position = hip_world
         thigh_shape = pymunk.Segment(thigh_body, (0, 0), (0, THIGH_LENGTH), LEG_THICKNESS)
         thigh_shape.friction = 1.0
-        thigh_shape.filter = NON_CEILING_FILTER
+        thigh_shape.filter = LEG_FILTER
         space.add(thigh_body, thigh_shape)
 
         hip_pivot = pymunk.PivotJoint(torso_body, thigh_body, hip_world)
@@ -78,7 +83,7 @@ def build_creature(space, genome, start_x=100):
         shin_body.position = knee_world
         shin_shape = pymunk.Segment(shin_body, (0, 0), (0, SHIN_LENGTH), LEG_THICKNESS)
         shin_shape.friction = 1.0
-        shin_shape.filter = NON_CEILING_FILTER
+        shin_shape.filter = LEG_FILTER
         space.add(shin_body, shin_shape)
 
         knee_pivot = pymunk.PivotJoint(thigh_body, shin_body, knee_world)
