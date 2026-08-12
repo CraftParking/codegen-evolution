@@ -2,7 +2,7 @@ import math
 
 import pymunk
 
-GROUND_Y = 550
+GROUND_Y = 400
 TORSO_WIDTH = 80
 TORSO_HEIGHT = 20
 TORSO_MASS = 5
