@@ -35,13 +35,20 @@ gen 11: fitness 0.00122   ((x * x) - (-4.42 / 4.58))
 ## Walking creatures
 
 A second sandbox: evolve stick-figure creatures (four fixed-length legs,
-each with a thigh + shin joint) driven by sine-wave "muscle" motors, in a
-2D physics simulation scored purely on distance traveled. The torso can't
-rotate — it only translates — so all locomotion has to come from the legs
-pushing against the ground. A ceiling above the arena hard-caps how high
-anything can jump, so evolved hoppers stay within the visible window.
-Nobody designs the gait; evolution only tunes each hip and knee motor's
-amplitude/frequency/phase to find a stride that works.
+each with a thigh + shin joint) in a 2D physics simulation scored purely on
+distance traveled. The torso can't rotate — it only translates — so all
+locomotion has to come from the legs pushing against the ground. A ceiling
+above the arena hard-caps how high anything can jump, so evolved hoppers
+stay within the visible window, and the simulation stops early once a
+creature is no longer making forward progress (whatever it's doing with its
+legs at that point isn't being selected on, so there's no point watching it).
+
+This is **neuroevolution**: each leg is driven by the same tiny neural
+network (7 inputs — a time signal plus that leg's own joint angles/velocities
+— through a hidden layer to 2 motor outputs), and the genome *is* that
+network's weights (82 numbers). Nobody designs the gait or the control
+logic; evolution shapes the network from scratch via mutation + crossover
+on its weights, the same GA machinery as the rest of this repo.
 
 ```
 pip install -r requirements.txt
@@ -56,7 +63,8 @@ generations fly by; playback afterward is a separate, single-process,
 real-time loop and isn't affected by that. Needs `pymunk` (physics) and
 `pygame-ce` (rendering) — installed via `requirements.txt`.
 
-- `creatures/genome.py` — per-leg genes: hip and knee motor amplitude/frequency/phase
+- `creatures/brain.py` — the shared per-leg neural network (forward pass only)
+- `creatures/genome.py` — the genome is just the network's flat weight vector
 - `creatures/body.py` — builds a torso + two-segment legs in a pymunk physics space
-- `creatures/simulate.py` — drives the motors and scores distance traveled
+- `creatures/simulate.py` — runs the network each step, scores distance, detects when it's stuck
 - `creatures/evolve_creatures.py` — the generation loop
