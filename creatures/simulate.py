@@ -2,7 +2,7 @@ import math
 
 import pymunk
 
-from creatures.body import GROUND_Y, add_ground, build_creature
+from creatures.body import GROUND_Y, add_ceiling, add_ground, build_creature
 
 
 def drive_motors(creature, t):
@@ -20,6 +20,7 @@ def evaluate(genome, sim_time=6.0, dt=1 / 60.0):
     space = pymunk.Space()
     space.gravity = (0, 900)
     add_ground(space)
+    add_ceiling(space)
     creature = build_creature(space, genome)
     torso = creature["torso"]
     start_x = torso.position.x

@@ -1,7 +1,7 @@
 import pygame
 import pymunk
 
-from creatures.body import GROUND_Y, SHIN_LENGTH, THIGH_LENGTH, add_ground, build_creature
+from creatures.body import GROUND_Y, SHIN_LENGTH, THIGH_LENGTH, add_ceiling, add_ground, build_creature
 from creatures.evolve_creatures import run
 from creatures.simulate import drive_motors
 
@@ -25,6 +25,7 @@ def render(genome, sim_time=15.0, dt=1 / 60.0):
     space = pymunk.Space()
     space.gravity = (0, 900)
     add_ground(space)
+    add_ceiling(space)
     creature = build_creature(space, genome)
     torso = creature["torso"]
     start_x = torso.position.x

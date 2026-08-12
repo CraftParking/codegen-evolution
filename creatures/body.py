@@ -3,6 +3,7 @@ import math
 import pymunk
 
 GROUND_Y = 400
+CEILING_Y = 20
 TORSO_WIDTH = 80
 TORSO_HEIGHT = 20
 TORSO_MASS = 5
@@ -19,6 +20,15 @@ def add_ground(space):
     ground.elasticity = 0.0
     space.add(ground)
     return ground
+
+
+def add_ceiling(space):
+    # hard cap so no jump can ever go higher than the visible window
+    ceiling = pymunk.Segment(space.static_body, (-1000, CEILING_Y), (100_000, CEILING_Y), 5)
+    ceiling.friction = 0.0
+    ceiling.elasticity = 0.0
+    space.add(ceiling)
+    return ceiling
 
 
 def build_creature(space, genome, start_x=100):
