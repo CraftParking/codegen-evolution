@@ -3,7 +3,7 @@ import pymunk
 
 from creatures.body import GROUND_Y, SHIN_LENGTH, THIGH_LENGTH, add_ceiling, add_ground, build_creature
 from creatures.evolve_creatures import run
-from creatures.simulate import drive_motors
+from creatures.simulate import clamp_to_ceiling, drive_motors
 
 WIDTH, HEIGHT = 900, 500
 CAMERA_X = 200
@@ -39,6 +39,7 @@ def render(genome, sim_time=15.0, dt=1 / 60.0):
 
         drive_motors(creature, t)
         space.step(dt)
+        clamp_to_ceiling(creature)
         t += dt
 
         camera_offset = torso.position.x

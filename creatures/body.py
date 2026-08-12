@@ -4,6 +4,7 @@ import pymunk
 
 GROUND_Y = 400
 CEILING_Y = 20
+CEILING_RADIUS = 5
 TORSO_WIDTH = 80
 TORSO_HEIGHT = 20
 TORSO_MASS = 5
@@ -23,6 +24,11 @@ CREATURE_GROUP = 1
 LEG_FILTER = pymunk.ShapeFilter(group=CREATURE_GROUP, mask=ALL_CATEGORIES & ~CEILING_CATEGORY)
 TORSO_FILTER = pymunk.ShapeFilter(group=CREATURE_GROUP)
 
+# collision alone can still let a fast-moving torso tunnel through the thin
+# ceiling line in a single physics step; this is the hard, guaranteed floor
+# on how high the torso's center can ever end up, enforced every step.
+TORSO_MIN_Y = CEILING_Y + TORSO_HEIGHT / 2 + CEILING_RADIUS
+
 
 def add_ground(space):
     ground = pymunk.Segment(space.static_body, (-1000, GROUND_Y), (100_000, GROUND_Y), 5)
@@ -34,7 +40,7 @@ def add_ground(space):
 
 def add_ceiling(space):
     # hard cap so no jump can ever go higher than the visible window
-    ceiling = pymunk.Segment(space.static_body, (-1000, CEILING_Y), (100_000, CEILING_Y), 5)
+    ceiling = pymunk.Segment(space.static_body, (-1000, CEILING_Y), (100_000, CEILING_Y), CEILING_RADIUS)
     ceiling.friction = 0.0
     ceiling.elasticity = 0.0
     ceiling.filter = pymunk.ShapeFilter(categories=CEILING_CATEGORY)

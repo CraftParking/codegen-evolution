@@ -2,7 +2,7 @@ import math
 
 import pymunk
 
-from creatures.body import GROUND_Y, add_ceiling, add_ground, build_creature
+from creatures.body import GROUND_Y, TORSO_MIN_Y, add_ceiling, add_ground, build_creature
 
 
 def drive_motors(creature, t):
@@ -14,6 +14,14 @@ def drive_motors(creature, t):
         leg["knee_motor"].rate = gene["knee_amplitude"] * math.sin(
             2 * math.pi * gene["knee_frequency"] * t + gene["knee_phase"]
         )
+
+
+def clamp_to_ceiling(creature):
+    torso = creature["torso"]
+    if torso.position.y < TORSO_MIN_Y:
+        torso.position = (torso.position.x, TORSO_MIN_Y)
+        vx, vy = torso.velocity
+        torso.velocity = (vx, max(vy, 0.0))
 
 
 def evaluate(genome, sim_time=6.0, dt=1 / 60.0):
@@ -29,6 +37,7 @@ def evaluate(genome, sim_time=6.0, dt=1 / 60.0):
     for _ in range(int(sim_time / dt)):
         drive_motors(creature, t)
         space.step(dt)
+        clamp_to_ceiling(creature)
         t += dt
         if torso.position.y > GROUND_Y - 5:
             break
