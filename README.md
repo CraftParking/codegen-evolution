@@ -31,3 +31,25 @@ gen 11: fitness 0.00122   ((x * x) - (-4.42 / 4.58))
 - `genepool/crossover.py` — subtree swap between two parents
 - `genepool/evolve.py` — the generation loop
 - `examples/` — target problems to evolve toward
+
+## Walking creatures
+
+A second sandbox: evolve stick-figure creatures (leg lengths + sine-wave
+"muscle" motors) in a 2D physics simulation, selected purely on how far they
+travel before falling over. Nobody designs the gait — evolution finds
+whatever works, including flailing, rolling, or hopping.
+
+```
+pip install -r requirements.txt
+python -m examples.walking_creatures
+```
+
+It evolves a population for a bit (prints distance each time it improves),
+then opens a window showing the winning creature in action. Needs
+`pymunk` (physics) and `pygame-ce` (rendering) — installed via
+`requirements.txt`.
+
+- `creatures/genome.py` — per-leg genes: length, motor amplitude/frequency/phase
+- `creatures/body.py` — builds a torso + legs in a pymunk physics space
+- `creatures/simulate.py` — drives the motors and scores distance traveled
+- `creatures/evolve_creatures.py` — the generation loop
