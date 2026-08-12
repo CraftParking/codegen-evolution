@@ -35,9 +35,10 @@ gen 11: fitness 0.00122   ((x * x) - (-4.42 / 4.58))
 ## Walking creatures
 
 A second sandbox: evolve stick-figure creatures (leg lengths + sine-wave
-"muscle" motors) in a 2D physics simulation, selected purely on how far they
-travel before falling over. Nobody designs the gait — evolution finds
-whatever works, including flailing, rolling, or hopping.
+"muscle" motors) in a 2D physics simulation, scored purely on distance
+traveled. The torso can't rotate — it only translates — so all locomotion
+has to come from the legs pushing against the ground. Nobody designs the
+gait; evolution finds whatever leg-length/timing combo works.
 
 ```
 pip install -r requirements.txt
