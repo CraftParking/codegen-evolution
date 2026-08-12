@@ -50,8 +50,11 @@ python -m examples.walking_creatures
 
 It evolves forever, printing distance each time it improves — press
 Ctrl+C whenever you've seen enough, and it opens a window showing the best
-creature found so far in action. Needs `pymunk` (physics) and `pygame-ce`
-(rendering) — installed via `requirements.txt`.
+creature found so far in action. Fitness evaluation runs in parallel across
+all CPU cores while evolving (each genome's physics sim is independent), so
+generations fly by; playback afterward is a separate, single-process,
+real-time loop and isn't affected by that. Needs `pymunk` (physics) and
+`pygame-ce` (rendering) — installed via `requirements.txt`.
 
 - `creatures/genome.py` — per-leg genes: hip and knee motor amplitude/frequency/phase
 - `creatures/body.py` — builds a torso + two-segment legs in a pymunk physics space
