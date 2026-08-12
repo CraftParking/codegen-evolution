@@ -34,11 +34,12 @@ gen 11: fitness 0.00122   ((x * x) - (-4.42 / 4.58))
 
 ## Walking creatures
 
-A second sandbox: evolve stick-figure creatures (leg lengths + sine-wave
-"muscle" motors) in a 2D physics simulation, scored purely on distance
-traveled. The torso can't rotate — it only translates — so all locomotion
-has to come from the legs pushing against the ground. Nobody designs the
-gait; evolution finds whatever leg-length/timing combo works.
+A second sandbox: evolve stick-figure creatures (four fixed-length legs
+driven by sine-wave "muscle" motors) in a 2D physics simulation, scored
+purely on distance traveled. The torso can't rotate — it only translates —
+so all locomotion has to come from the legs pushing against the ground.
+Nobody designs the gait; evolution only tunes each leg's motor
+amplitude/frequency/phase to find a timing pattern that works.
 
 ```
 pip install -r requirements.txt
@@ -50,7 +51,7 @@ then opens a window showing the winning creature in action. Needs
 `pymunk` (physics) and `pygame-ce` (rendering) — installed via
 `requirements.txt`.
 
-- `creatures/genome.py` — per-leg genes: length, motor amplitude/frequency/phase
+- `creatures/genome.py` — per-leg genes: motor amplitude/frequency/phase
 - `creatures/body.py` — builds a torso + legs in a pymunk physics space
 - `creatures/simulate.py` — drives the motors and scores distance traveled
 - `creatures/evolve_creatures.py` — the generation loop
