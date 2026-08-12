@@ -1,7 +1,7 @@
 import pygame
 import pymunk
 
-from creatures.body import GROUND_Y, LEG_LENGTH, add_ground, build_creature
+from creatures.body import GROUND_Y, SHIN_LENGTH, THIGH_LENGTH, add_ground, build_creature
 from creatures.evolve_creatures import run
 from creatures.simulate import drive_motors
 
@@ -52,11 +52,18 @@ def render(genome, sim_time=15.0, dt=1 / 60.0):
             pygame.draw.line(screen, (60, 120, 60), (sx, sy - 8), (sx, sy + 8), 2)
 
         for leg in creature["legs"]:
-            leg_body = leg["body"]
-            a = leg_body.local_to_world((0, 0))
-            b = leg_body.local_to_world((0, LEG_LENGTH))
+            thigh_body = leg["hip_body"]
+            hip = thigh_body.local_to_world((0, 0))
+            knee = thigh_body.local_to_world((0, THIGH_LENGTH))
             pygame.draw.line(
-                screen, (200, 160, 60), to_screen(a, camera_offset), to_screen(b, camera_offset), 5
+                screen, (200, 160, 60), to_screen(hip, camera_offset), to_screen(knee, camera_offset), 5
+            )
+
+            shin_body = leg["knee_body"]
+            knee = shin_body.local_to_world((0, 0))
+            foot = shin_body.local_to_world((0, SHIN_LENGTH))
+            pygame.draw.line(
+                screen, (220, 190, 100), to_screen(knee, camera_offset), to_screen(foot, camera_offset), 5
             )
 
         corners = [torso.local_to_world(v) for v in creature["shape"].get_vertices()]
