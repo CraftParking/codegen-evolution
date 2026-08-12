@@ -2,6 +2,8 @@ import math
 
 import pymunk
 
+from creatures.genome import NUM_LEGS
+
 GROUND_Y = 400
 CEILING_Y = 20
 CEILING_RADIUS = 5
@@ -60,10 +62,9 @@ def build_creature(space, genome, start_x=100):
     torso_shape.filter = TORSO_FILTER
     space.add(torso_body, torso_shape)
 
-    num_legs = len(genome)
     legs = []
-    for i, leg_gene in enumerate(genome):
-        offset_x = -TORSO_WIDTH / 2 + (i + 0.5) * (TORSO_WIDTH / num_legs)
+    for i in range(NUM_LEGS):
+        offset_x = -TORSO_WIDTH / 2 + (i + 0.5) * (TORSO_WIDTH / NUM_LEGS)
         hip_world = (
             torso_body.position.x + offset_x,
             torso_body.position.y + TORSO_HEIGHT / 2,
@@ -106,8 +107,7 @@ def build_creature(space, genome, start_x=100):
                 "knee_body": shin_body,
                 "knee_shape": shin_shape,
                 "knee_motor": knee_motor,
-                "gene": leg_gene,
             }
         )
 
-    return {"torso": torso_body, "shape": torso_shape, "legs": legs}
+    return {"torso": torso_body, "shape": torso_shape, "legs": legs, "genome": genome}

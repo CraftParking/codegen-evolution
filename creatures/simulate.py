@@ -3,17 +3,27 @@ import math
 import pymunk
 
 from creatures.body import GROUND_Y, TORSO_MIN_Y, add_ceiling, add_ground, build_creature
+from creatures.brain import forward
 
 
 def drive_motors(creature, t):
-    for leg in creature["legs"]:
-        gene = leg["gene"]
-        leg["hip_motor"].rate = gene["hip_amplitude"] * math.sin(
-            2 * math.pi * gene["hip_frequency"] * t + gene["hip_phase"]
-        )
-        leg["knee_motor"].rate = gene["knee_amplitude"] * math.sin(
-            2 * math.pi * gene["knee_frequency"] * t + gene["knee_phase"]
-        )
+    genome = creature["genome"]
+    num_legs = len(creature["legs"])
+    for i, leg in enumerate(creature["legs"]):
+        thigh = leg["hip_body"]
+        shin = leg["knee_body"]
+        inputs = [
+            math.sin(t),
+            math.cos(t),
+            thigh.angle,
+            thigh.angular_velocity,
+            shin.angle - thigh.angle,
+            shin.angular_velocity - thigh.angular_velocity,
+            i / num_legs,
+        ]
+        hip_rate, knee_rate = forward(genome, inputs)
+        leg["hip_motor"].rate = hip_rate
+        leg["knee_motor"].rate = knee_rate
 
 
 def clamp_to_ceiling(creature):
