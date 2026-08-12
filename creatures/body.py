@@ -5,6 +5,7 @@ import pymunk
 from creatures.genome import NUM_LEGS
 
 GROUND_Y = 400
+GROUND_RADIUS = 5
 CEILING_Y = 20
 CEILING_RADIUS = 5
 TORSO_WIDTH = 80
@@ -33,7 +34,7 @@ TORSO_MIN_Y = CEILING_Y + TORSO_HEIGHT / 2 + CEILING_RADIUS
 
 
 def add_ground(space):
-    ground = pymunk.Segment(space.static_body, (-1000, GROUND_Y), (100_000, GROUND_Y), 5)
+    ground = pymunk.Segment(space.static_body, (-1000, GROUND_Y), (100_000, GROUND_Y), GROUND_RADIUS)
     ground.friction = 1.0
     ground.elasticity = 0.0
     space.add(ground)

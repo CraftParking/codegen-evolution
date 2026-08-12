@@ -3,7 +3,7 @@ import pymunk
 
 from creatures.body import GROUND_Y, SHIN_LENGTH, THIGH_LENGTH, add_ceiling, add_ground, build_creature
 from creatures.evolve_creatures import run
-from creatures.simulate import clamp_to_ceiling, drive_motors
+from creatures.simulate import check_stuck, clamp_to_ceiling, drive_motors, make_stuck_tracker
 
 WIDTH, HEIGHT = 900, 500
 CAMERA_X = 200
@@ -29,6 +29,7 @@ def render(genome, sim_time=15.0, dt=1 / 60.0):
     creature = build_creature(space, genome)
     torso = creature["torso"]
     start_x = torso.position.x
+    tracker = make_stuck_tracker(torso)
 
     t = 0.0
     running = True
@@ -41,6 +42,12 @@ def render(genome, sim_time=15.0, dt=1 / 60.0):
         space.step(dt)
         clamp_to_ceiling(creature)
         t += dt
+
+        if check_stuck(torso, tracker):
+            # matches evaluate()'s stop condition — don't keep playing past
+            # the point evolution never actually got credit/blame for.
+            print("creature stopped making progress, ending playback")
+            running = False
 
         camera_offset = torso.position.x
 
